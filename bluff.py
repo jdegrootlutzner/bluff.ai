@@ -122,7 +122,7 @@ class Player:
 def create_short_deck(num_sets):
     '''
     Takes the number of sets the user wants. A set is four cards from
-    the same value.
+    the same value.3
     num_sets must be in between 1 and 13 inclusive
     '''
     if num_sets > HIGHEST_VALUE or num_sets < 0:
@@ -146,20 +146,36 @@ def player_choose_num_sets():
           pass
     return choice
 
-def deal_hands():
-    print('n')
+def deal_hands( player_list, deck ):
+    '''
+    Right now I treat hands as players. Later I think I will create a player
+    class so that I can hold onto other information. Maybe I wont need it?
+    '''
+    num_players = len(player_list)
+    num_cards = len(deck)
+    while (num_cards >= num_players):
+        i = 0
+        while i < num_players:
+            player_list[i].add_cards(deck.pick_card)
+            i = i + 1
+            num_cards = num_cards - 1
+    print(str(num_cards) + " cards were not dealt.")
 
-def play_bluff():
+
+
+
+
+def play_bluff_against_comp():
     print('Welcome to bluff!')
-    deck = Deck()
     short_deck = create_short_deck( player_choose_num_sets() )
     short_deck.shuffle()
-
     player_hand = Hand()
     computer_hand = Hand()
+    deal_hands([player_hand, computer_hand], short_deck)
 
 
-play_bluff()
+
+play_bluff_against_comp()
 #
 # choice = None
 # while choice not in [1, 2, 3]:
