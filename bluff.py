@@ -1,5 +1,6 @@
 import itertools
 import random
+from math import ceil
 
 """
 @author Julian DeGroot-Lutzner
@@ -62,8 +63,25 @@ class Hand:
             hand = hand[:-2]
             return(hand)
 
-    def add_cards(self, cards):
-        self.cards.append(cards)
+    def insrt(self, new_card, lo, hi):
+        if lo == hi:
+            self.cards[lo:lo] = [new_card]
+        else:
+            mid= ceil((hi+lo)/2)-1
+            if self.cards[mid].value == new_card.value:
+                self.cards[mid:mid] = [new_card]
+            elif self.cards[mid].value > new_card.value:
+                self.insrt(new_card, lo, mid+1)
+            else:
+                self.insrt(new_card, mid+1, hi)
+
+    def add_cards(self, new_cards):
+        '''
+        I want this to add the card in a sorted order. At first I dont care
+        about suit. Lets use something like binary search.
+        '''
+        for new_card in new_cards:
+            self.insrt(new_card, 0, len(self.cards))
 
     def remove_cards(self, cards):
         print('not yet')
@@ -156,13 +174,10 @@ def deal_hands( player_list, deck ):
     while (num_cards >= num_players):
         i = 0
         while i < num_players:
-            player_list[i].add_cards(deck.pick_card)
+            player_list[i].add_cards([deck.pick_card()])
             i = i + 1
             num_cards = num_cards - 1
     print(str(num_cards) + " cards were not dealt.")
-
-
-
 
 
 def play_bluff_against_comp():
@@ -170,12 +185,22 @@ def play_bluff_against_comp():
     short_deck = create_short_deck( player_choose_num_sets() )
     short_deck.shuffle()
     player_hand = Hand()
+    print(player_hand)
     computer_hand = Hand()
     deal_hands([player_hand, computer_hand], short_deck)
-
+    print(player_hand)
+    print(computer_hand)
 
 
 play_bluff_against_comp()
+
+# deck = Deck()
+# hand = Hand()
+# hand.add_cards([deck.pick_card()])
+# hand.add_cards([deck.pick_card()])
+# print(hand)
+
+
 #
 # choice = None
 # while choice not in [1, 2, 3]:
@@ -201,10 +226,10 @@ play_bluff_against_comp()
 # i=0
 # while i < NUM_CARDS/num_players:
 #     # for player in Players list
-#     hand1.add_cards(deck.pick_card())
-#     hand2.add_cards(deck.pick_card())
-#     hand3.add_cards(deck.pick_card())
-#     hand4.add_cards(deck.pick_card())
+#     hand1.add_cards([deck.pick_card()])
+#     hand2.add_cards([deck.pick_card()])
+#     hand3.add_cards([deck.pick_card()])
+#     hand4.add_cards([deck.pick_card()])
 #     i = i + 1
 #
 # print(hand4)
