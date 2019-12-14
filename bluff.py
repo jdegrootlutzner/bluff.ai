@@ -1,6 +1,6 @@
 import itertools
 import random
-from math import ceil
+from math import floor
 
 """
 @author Julian DeGroot-Lutzner
@@ -63,17 +63,21 @@ class Hand:
             hand = hand[:-2]
             return(hand)
 
-    def insrt(self, new_card, lo, hi):
-        if lo == hi:
+    def insert_sorted_order(self, new_card, lo, hi):
+        if lo >= hi:
+            # Base case
             self.cards[lo:lo] = [new_card]
         else:
-            mid= ceil((hi+lo)/2)-1
+            mid= floor(lo + (hi-lo)/2)
             if self.cards[mid].value == new_card.value:
+                # if the value is the same as the midpoint, put card there
                 self.cards[mid:mid] = [new_card]
             elif self.cards[mid].value > new_card.value:
-                self.insrt(new_card, lo, mid+1)
+                # card value is to the left of mid
+                self.insert_sorted_order(new_card, lo, mid-1)
             else:
-                self.insrt(new_card, mid+1, hi)
+                # card value is to the right of mid
+                self.insert_sorted_order(new_card, mid+1, hi)
 
     def add_cards(self, new_cards):
         '''
@@ -81,7 +85,7 @@ class Hand:
         about suit. Lets use something like binary search.
         '''
         for new_card in new_cards:
-            self.insrt(new_card, 0, len(self.cards))
+            self.insert_sorted_order(new_card, 0, len(self.cards))
 
     def remove_cards(self, cards):
         print('not yet')
