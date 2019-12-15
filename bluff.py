@@ -64,11 +64,14 @@ class Hand:
             return(hand)
 
     def insert_sorted_order(self, new_card, lo, hi):
-        if lo >= hi:
+        mid= floor(lo + (hi-lo)/2)
+        print("lo = " + str(lo) + "   Mid = " + str(mid) + "  hi = " + str(hi))
+        if lo > hi:
             # Base case
             self.cards[lo:lo] = [new_card]
         else:
-            mid= floor(lo + (hi-lo)/2)
+            print("Mid value = " + str(self.cards[mid].value) + "   new card = " + str(new_card.value))
+
             if self.cards[mid].value == new_card.value:
                 # if the value is the same as the midpoint, put card there
                 self.cards[mid:mid] = [new_card]
@@ -85,7 +88,7 @@ class Hand:
         about suit. Lets use something like binary search.
         '''
         for new_card in new_cards:
-            self.insert_sorted_order(new_card, 0, len(self.cards))
+            self.insert_sorted_order(new_card, 0, len(self.cards)-1)
 
     def remove_cards(self, cards):
         print('not yet')
@@ -197,10 +200,20 @@ def play_bluff_against_comp():
 
 
 play_bluff_against_comp()
+def check_add():
+    deck = Deck()
+    deck.shuffle()
+    hand = Hand()
+    i=0
+    num_cards=len(deck)
+    while i < num_cards:
+        new_card = deck.pick_card()
+        hand.add_cards([new_card])
+        print("i = " + str(i) + "   card = " + str(new_card) + "    hand = " + str(hand))
+        i = i + 1
+        player_choose_num_sets()
 
-# deck = Deck()
-# hand = Hand()
-# hand.add_cards([deck.pick_card()])
+# check_add()
 # hand.add_cards([deck.pick_card()])
 # print(hand)
 
