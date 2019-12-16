@@ -15,6 +15,7 @@ POSSIBLE_VALUES_NAMES = ['Ace','Two','Three','Four','Five','Six',
 NUM_CARDS = HIGHEST_VALUE * len(POSSIBLE_SUITS)
 
 
+
 class Card:
     """
     Class to contain the contents of a card.
@@ -63,15 +64,24 @@ class Hand:
             hand = hand[:-2]
             return(hand)
 
+    def choices(self):
+        hand = ''
+        if self.cards is None:
+            return hand
+        else:
+            i = 0
+            for card in self.cards:
+                hand = hand + "[" + str(i) + "] " + str(card) + ", "
+                i = i + 1
+            hand = hand + '[' + str(i) + '] No Card'
+            return(hand)
+
     def insert_sorted_order(self, new_card, lo, hi):
         mid= floor(lo + (hi-lo)/2)
-        print("lo = " + str(lo) + "   Mid = " + str(mid) + "  hi = " + str(hi))
         if lo > hi:
             # Base case
             self.cards[lo:lo] = [new_card]
         else:
-            print("Mid value = " + str(self.cards[mid].value) + "   new card = " + str(new_card.value))
-
             if self.cards[mid].value == new_card.value:
                 # if the value is the same as the midpoint, put card there
                 self.cards[mid:mid] = [new_card]
@@ -84,14 +94,13 @@ class Hand:
 
     def add_cards(self, new_cards):
         '''
-        I want this to add the card in a sorted order. At first I dont care
-        about suit. Lets use something like binary search.
+        Adds cards to hand in sorted order. Does not sort suits
         '''
         for new_card in new_cards:
             self.insert_sorted_order(new_card, 0, len(self.cards)-1)
 
-    def remove_cards(self, cards):
-        print('not yet')
+    def remove_card(self, index):
+        return self.cards.pop(index)
 
 
     # def play_cards(self):
@@ -171,6 +180,37 @@ def player_choose_num_sets():
           pass
     return choice
 
+
+# def player_choose_turn_value(limited_value_names):
+
+
+def player_choose_cards(hand):
+    ''''
+    This user interaction is really janky, but lemme just get something done
+
+    If user doesnt give any cards this should be considered a pass
+    '''
+    cards = []
+    choice = None
+    i = 0
+    num_cards_set = len(POSSIBLE_SUITS)
+    while i < num_cards_set and len(hand) != 0:
+        # ask for card to play
+        print(hand.choices())
+        choice = ''
+        while choice not in range(0, len(hand)+1):
+            try:
+                choice = int(input('Card? \n'))
+            except ValueError:
+                pass
+        if choice == len(hand):
+            i = num_cards_set
+            break
+            # cards = cards.append([hand.remove_card(choice)])
+        cards.append([hand.remove_card(choice)])
+        i = i + 1
+    return cards
+
 def deal_hands( player_list, deck ):
     '''
     Right now I treat hands as players. Later I think I will create a player
@@ -189,14 +229,18 @@ def deal_hands( player_list, deck ):
 
 def play_bluff_against_comp():
     print('Welcome to bluff!')
-    short_deck = create_short_deck( player_choose_num_sets() )
+    num_sets = player_choose_num_sets()
+    short_deck = create_short_deck( num_sets )
     short_deck.shuffle()
     player_hand = Hand()
-    print(player_hand)
     computer_hand = Hand()
     deal_hands([player_hand, computer_hand], short_deck)
-    print(player_hand)
-    print(computer_hand)
+    limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
+                                                HIGHEST_VALUE]
+    player_choose_cards(player_hand)
+
+
+
 
 
 play_bluff_against_comp()
@@ -209,7 +253,6 @@ def check_add():
     while i < num_cards:
         new_card = deck.pick_card()
         hand.add_cards([new_card])
-        print("i = " + str(i) + "   card = " + str(new_card) + "    hand = " + str(hand))
         i = i + 1
         player_choose_num_sets()
 
