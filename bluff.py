@@ -113,21 +113,34 @@ class Pile:
     def __init__(self):
         self.cards = []
         self.curr_turn_cards = []
-        self.curr_turn_call = []
+        self.round_value = 0
 
-    def add_cards(self, cards, call):
-        self.card = self.card.append(cards)
+    def add_cards(self, cards):
+        self.cards.append(cards)
         self.curr_turn_call = call
-        self.curr_turn_cards = cards
 
     def pick_up(self):
         pile = self.cards
         self.cards = None
         return(pile)
 
+    def change_round(self, val):
+        self.round_value = val
 
-    # def check_call(self):
+    def check_call(self):
+        print(self.curr_turn_cards)
+        # print the cards the player just played and 'Let's see their cards'
+
+        # for loop to go through every card in the curr_turn_cards and see if they match the round value
+
+        # print 'They were lying!' or 'Nice try!'
         # return true if telling truth, return false if lying
+
+        '''
+        If we keep track of the round value, then we just need to see if each
+        card in the cards played on that turn match the value. We dont need to
+        keep track of the call
+        '''
 
 
 
@@ -181,7 +194,14 @@ def player_choose_num_sets():
     return choice
 
 
-# def player_choose_turn_value(limited_value_names):
+def player_choose_round_value(limited_value_names):
+
+    choices = ''
+    i = 0
+    for name in limited_value_names:
+        choices = choices + "[" + str(i) + "] " + name + ", "
+        i = i + 1
+    choices = choices[:-2]
 
 
 def player_choose_cards(hand):
@@ -234,16 +254,29 @@ def play_bluff_against_comp():
     short_deck.shuffle()
     player_hand = Hand()
     computer_hand = Hand()
+    pile = Pile()
     deal_hands([player_hand, computer_hand], short_deck)
     limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
                                                 HIGHEST_VALUE]
-    player_choose_cards(player_hand)
-
+    turn_cards = player_choose_cards(player_hand)
+    pile.add_cards(turn_cards, turn_cards)
+    turn2_cards = player_choose_cards(player_hand)
+    pile.add_cards(turn2_cards, turn_cards)
+    print(pile.check_call())
 
 
 
 
 play_bluff_against_comp()
+
+
+
+
+''''
+Below is code used for bug testing
+
+''''
+
 def check_add():
     deck = Deck()
     deck.shuffle()
