@@ -127,6 +127,7 @@ class Pile:
     def change_round(self, val):
         self.round_value = val
 
+
     def check_call(self):
         print(self.curr_turn_cards)
         # print the cards the player just played and 'Let's see their cards'
@@ -193,15 +194,29 @@ def player_choose_num_sets():
           pass
     return choice
 
-
-def player_choose_round_value(limited_value_names):
-
-    choices = ''
+def player_choose_round_value(limited_value_names, num_sets):
+    '''
+    Limited value names is the options of card values that the player can play
+    given the number of sets in play.
+    Num_sets is the number of sets that the player chose to play with in this
+    game
+    '''
+    options = ''
     i = 0
     for name in limited_value_names:
-        choices = choices + "[" + str(i) + "] " + name + ", "
+        options = options + "[" + str(i) + "] " + name + ", "
         i = i + 1
-    choices = choices[:-2]
+    options = options[:-2]
+    print('What card value do you want to play this round?')
+    choice = None
+
+    while choice not in range(0, i):
+       try:
+          choice = int(input(options + '\n'))
+       except ValueError:
+          pass
+
+    return HIGHEST_VALUE - num_sets + choice
 
 
 def player_choose_cards(hand):
@@ -258,24 +273,16 @@ def play_bluff_against_comp():
     deal_hands([player_hand, computer_hand], short_deck)
     limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
                                                 HIGHEST_VALUE]
-    turn_cards = player_choose_cards(player_hand)
-    pile.add_cards(turn_cards, turn_cards)
-    turn2_cards = player_choose_cards(player_hand)
-    pile.add_cards(turn2_cards, turn_cards)
-    print(pile.check_call())
-
-
-
+    pile.change_round(player_choose_round_value(limited_value_names, num_sets))
 
 play_bluff_against_comp()
 
 
 
 
-''''
+'''
 Below is code used for bug testing
-
-''''
+'''
 
 def check_add():
     deck = Deck()
