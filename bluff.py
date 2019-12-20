@@ -95,6 +95,8 @@ class Hand:
     def add_cards(self, new_cards):
         '''
         Adds cards to hand in sorted order. Does not sort suits
+        Since we know how many cards are in a deck, a better way of keeping
+        track of this information would be a dictionary
         '''
         for new_card in new_cards:
             self.insert_sorted_order(new_card, 0, len(self.cards)-1)
@@ -117,7 +119,7 @@ class Pile:
 
     def add_cards(self, cards):
         self.cards.append(cards)
-        self.curr_turn_call = cards
+        self.curr_turn_cards = cards
 
     def pick_up(self):
         pile = self.cards
@@ -130,7 +132,9 @@ class Pile:
 
     def check_call(self):
         for card in self.curr_turn_cards:
-            if card.value != self.round_value:
+            print(card)
+            print("Card Value = " + str(card[0].value) + "  Round Value =" + str(self.round_value) + "\n")
+            if card[0].value != self.round_value+1:
                 return False
         return True
 
@@ -291,7 +295,6 @@ def play_bluff_against_comp():
     deal_hands([player_hand, computer_hand], short_deck)
     limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
                                                 HIGHEST_VALUE]
-
     turn_cards = player_choose_cards(player_hand)
     pile.change_round(player_choose_round_value(limited_value_names, num_sets))
     say_call(len(turn_cards), pile.round_value)
