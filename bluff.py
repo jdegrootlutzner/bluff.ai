@@ -117,7 +117,7 @@ class Pile:
 
     def add_cards(self, cards):
         self.cards.append(cards)
-        self.curr_turn_call = call
+        self.curr_turn_call = cards
 
     def pick_up(self):
         pile = self.cards
@@ -129,7 +129,11 @@ class Pile:
 
 
     def check_call(self):
-        print(self.curr_turn_cards)
+        for card in self.curr_turn_cards:
+            if card.value != self.round_value:
+                return False
+        return True
+
         # print the cards the player just played and 'Let's see their cards'
 
         # for loop to go through every card in the curr_turn_cards and see if they match the round value
@@ -207,7 +211,7 @@ def player_choose_round_value(limited_value_names, num_sets):
         options = options + "[" + str(i) + "] " + name + ", "
         i = i + 1
     options = options[:-2]
-    print('What card value do you want to play this round?')
+    print('What card value do you want to say these cards were?')
     choice = None
 
     while choice not in range(0, i):
@@ -261,6 +265,20 @@ def deal_hands( player_list, deck ):
             num_cards = num_cards - 1
     print(str(num_cards) + " cards were not dealt.")
 
+def say_call(num_cards, round_value):
+    if num_cards == 0:
+        print('Pass!')
+    else:
+        switch = {
+            1: 'One',
+            2: 'Two',
+            3: 'Three',
+            4: 'Four'
+        }
+        call = switch.get(num_cards) + ' ' + POSSIBLE_VALUES_NAMES[round_value] + 's'
+        if num_cards == 1:
+            call = call[:-1]
+        print(call + '!')
 
 def play_bluff_against_comp():
     print('Welcome to bluff!')
@@ -273,8 +291,41 @@ def play_bluff_against_comp():
     deal_hands([player_hand, computer_hand], short_deck)
     limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
                                                 HIGHEST_VALUE]
-    pile.change_round(player_choose_round_value(limited_value_names, num_sets))
 
+    turn_cards = player_choose_cards(player_hand)
+    pile.change_round(player_choose_round_value(limited_value_names, num_sets))
+    say_call(len(turn_cards), pile.round_value)
+    # What if You passed! Shouldnt be adding a pass to the pile
+    pile.add_cards(turn_cards)
+    print(pile.check_call())
+
+
+    '''
+    Brainstorming all the times a round starts and the value needs to be declared
+
+    If all players pass in a row then the last person to play a card starts new round
+
+    If a player correctly guesses a bluff then the guesser starts new round
+
+    If a player incorrectly guesses a bluff then the last player who played a card starts round
+
+    If a new game is started then the first person has to declare the card.
+
+
+    From this I learned that in more than two players I will need to keep track
+    of the last person to play a card. As well as whose turn it is. I could have
+    a pass_counter as well, and after someone passes then we check to see if the
+    pass_counter == num_players and if it does then the last person who played a
+    card starts the round.
+
+    I could have a game class? that keeps track of the information above. And
+    then I could have the option of starting a new game.
+    That sounds cool. Idk if i need that though
+
+    Todo:
+    -
+
+    '''
 play_bluff_against_comp()
 
 
