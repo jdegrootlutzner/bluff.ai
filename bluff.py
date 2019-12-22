@@ -301,6 +301,23 @@ def play_bluff_against_comp():
     # What if You passed! Shouldnt be adding a pass to the pile
     pile.add_cards(turn_cards)
     print(pile.check_call())
+    # while in_round:
+        # player starts. keep track of who should start.
+        # player chooses cards (starter should have to play at least one card)
+        # player chooses round value
+        # cards are printed to "console"
+        # other players can call bluff. [I need to think about this!]
+        # could have a players turn function, which takes in a player as a call
+        # player 'starter' value could be a boolean variable of the class, and choose card could take it as a function call
+        # then we could iterate through a player list
+        # if passes equals num_players then start new round
+        # instead of having adding player class, i could add these things to hand
+        
+
+
+
+
+
 
 
     '''
