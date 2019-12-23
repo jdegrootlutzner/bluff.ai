@@ -286,15 +286,19 @@ def say_call(num_cards, round_value):
 
 def play_bluff_against_comp():
     print('Welcome to bluff!')
-    num_sets = player_choose_num_sets()
-    short_deck = create_short_deck( num_sets )
-    short_deck.shuffle()
+    # initiliaze each player
     player_hand = Hand()
     computer_hand = Hand()
-    pile = Pile()
-    deal_hands([player_hand, computer_hand], short_deck)
+    player_list = [player_hand, computer_hand]
+    # initiliaze the amount of sets of cards in the game and playable values
+    num_sets = player_choose_num_sets()
     limited_value_names = POSSIBLE_VALUES_NAMES[HIGHEST_VALUE - num_sets:
                                                 HIGHEST_VALUE]
+    short_deck = create_short_deck( num_sets )
+    short_deck.shuffle()
+    deal_hands(player_list, short_deck)
+    pile = Pile()
+
     turn_cards = player_choose_cards(player_hand)
     pile.change_round(player_choose_round_value(limited_value_names, num_sets))
     say_call(len(turn_cards), pile.round_value)
@@ -312,7 +316,7 @@ def play_bluff_against_comp():
         # then we could iterate through a player list
         # if passes equals num_players then start new round
         # instead of having adding player class, i could add these things to hand
-        
+
 
 
 
